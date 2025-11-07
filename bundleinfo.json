@@ -1,0 +1,18 @@
+{
+  "materials": {},
+  "prefabs": {
+    "scene": "assets/huntress/prefabs/scene.prefab",
+    "customnote": "assets/vivifytemplate/utilities/prefabs/custom objects/customnote.prefab",
+    "customnotedebris": "assets/vivifytemplate/utilities/prefabs/custom objects/customnotedebris.prefab",
+    "customnotedot": "assets/vivifytemplate/utilities/prefabs/custom objects/customnotedot.prefab"
+  },
+  "bundleFiles": [
+    "F:/Games/Beat Saber VR/Beat Saber_Data/CustomWIPLevels/Huntress/bundleWindows2019.vivify",
+    "F:/Games/Beat Saber VR/Beat Saber_Data/CustomWIPLevels/Huntress/bundleWindows2021.vivify"
+  ],
+  "bundleCRCs": {
+    "_windows2019": 4266926486,
+    "_windows2021": 3554974908
+  },
+  "isCompressed": true
+}
