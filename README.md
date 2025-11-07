@@ -8,6 +8,6 @@ These are the source files for a Beat Saber custom map made using the Vivify mod
 # Why is it uploaded
 So that others can learn from this map and hopefully fix something or improve in their own Vivify maps.
 
-Most assets were created by me. The sky was made by [n-yoda](https://github.com/n-yoda/unity-skybox-shaders).
+Nearly all assets were created by me. The sky was made by [n-yoda](https://github.com/n-yoda/unity-skybox-shaders).
 
 You can reuse all assets in this project in your own projects.
