@@ -7,6 +7,8 @@ public class AudioControlsState : PlayerPrefsSerializer
 {
     [SerializeField] public bool m_isAudioEnabled = false;
     [SerializeField] public Color m_waveformColor = new Color(0, 0.4f, 0.5f, 1);
+    [SerializeField] public int m_waveformHeight = 80;
+    [SerializeField] public bool m_waveformBG = false;
     [SerializeField] public bool m_bpmGuideEnabled = false;
     [SerializeField] public float m_bpm = 60f;
     [SerializeField] public Color m_bpmGuideColor = new Color(1, 1, 1, 0.4f);
@@ -41,6 +43,8 @@ public class AudioControlsState : PlayerPrefsSerializer
             m_audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
         }
         m_waveformColor = LoadColor("waveformColor", new Color(0, 0.4f, 0.5f, 1));
+        m_waveformHeight = LoadInt("waveformHeight", 80);
+        m_waveformBG = LoadBool("waveformBG");
         m_bpmGuideEnabled = LoadBool("bpmGuideEnabled");
         m_bpm = Mathf.Max(1, LoadFloat("bpm", 60));
         m_bpmGuideColor = LoadColor("bpmGuideColor", new Color(1, 1, 1, 0.6f));
@@ -58,6 +62,8 @@ public class AudioControlsState : PlayerPrefsSerializer
             SaveString("audioClipPath", path);
         }
         SaveColor("waveformColor", m_waveformColor);
+        SaveFloat("waveformHeight", m_waveformHeight);
+        SaveBool("waveformBG", m_waveformBG);
         SaveBool("bpmGuideEnabled", m_bpmGuideEnabled);
         SaveFloat("bpm", m_bpm);
         SaveColor("bpmGuideColor", m_bpmGuideColor);

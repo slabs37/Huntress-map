@@ -228,13 +228,18 @@ namespace UnityEditor.Enemeteen {
 				Rect? audioWaveformRect = null;
 				if (state.audioControlsState.m_isAudioEnabled && !state.animatorIsOptimized && !m_State.disabled)
 				{
-					audioWaveformRect = GUILayoutUtility.GetRect(contentWidth, 80);
+					if (state.audioControlsState.m_waveformBG && !m_State.showCurveEditor) {
+					// When the waveform is in the background we essentially don't need a window
+					audioWaveformRect = GUILayoutUtility.GetRect(contentWidth, 0);
+					} else {
+					audioWaveformRect = GUILayoutUtility.GetRect(contentWidth, state.audioControlsState.m_waveformHeight);
+					}
 				}
-				
+				// Calling Waveform before main content in order to draw in bg if needed
+				AudioWaveformOnGUI(contentLayoutRect, audioWaveformRect);
 				// MainContent must be done first since it resizes the Zoomable area.
 				MainContentOnGUI(contentLayoutRect);
 				TimeRulerOnGUI(timerulerRect);
-				AudioWaveformOnGUI(audioWaveformRect);
 				EventLineOnGUI(eventsRect);
 				GUILayout.EndVertical();
 
@@ -634,20 +639,25 @@ namespace UnityEditor.Enemeteen {
 				RenderOutOfRangeOverlay(timeRulerRectNoScrollbar);
 		}
 
-		private void AudioWaveformOnGUI(Rect? audioWaveformRect)
+		private void AudioWaveformOnGUI(Rect contentLayoutRect, Rect? audioWaveformRect)
 		{
 			if (!audioWaveformRect.HasValue)
 			{
 				return;
 			}
-			Rect guiRect = audioWaveformRect.Value;
-			
-			GUI.Box(guiRect, GUIContent.none);
-			Rect noSlidersRect = new Rect(guiRect.xMin, guiRect.yMin, guiRect.width - kSliderThickness, guiRect.height);
-			
-			m_State.timeArea.TimeRuler(noSlidersRect, m_State.frameRate, false, true, kDisabledRulerAlpha, m_State.timeFormat);  // grid
-			m_AudioWaveformVisualizer.DrawWaveform(noSlidersRect);
 
+			Rect noSlidersRect;
+			if (state.audioControlsState.m_waveformBG && !m_State.showCurveEditor) {
+				noSlidersRect = new Rect(contentLayoutRect.xMin, contentLayoutRect.yMax-state.audioControlsState.m_waveformHeight, contentLayoutRect.width - kSliderThickness, state.audioControlsState.m_waveformHeight);
+				m_AudioWaveformVisualizer.DrawWaveform(noSlidersRect);
+			} else {
+				Rect guiRect = audioWaveformRect.Value;
+				GUI.Box(guiRect, GUIContent.none);
+
+				noSlidersRect = new Rect(guiRect.xMin, guiRect.yMin, guiRect.width - kSliderThickness, guiRect.height);
+				m_State.timeArea.TimeRuler(noSlidersRect, m_State.frameRate, false, true, kDisabledRulerAlpha, m_State.timeFormat);  // grid
+				m_AudioWaveformVisualizer.DrawWaveform(noSlidersRect);
+			}
 			if (state.audioControlsState.m_bpmGuideEnabled)
 			{
 				m_AudioWaveformVisualizer.DrawBPMGuide(noSlidersRect);

@@ -1,10 +1,10 @@
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 // Original: Unity 5.2.1f1 built in shader "Skybox/Procedural"
 // Modified by n-yoda
 // https://github.com/n-yoda/unity-skybox-shaders
-// Modified by slabs37 - added line 402 to remove bloom in Beatsaber, added a multiplier at the end
+// Modified line 402 to remove bloom in Beatsaber, added a multiplier at the end
 Shader "Custom/Starry Sky" {
 Properties {
 	[Header(Sun)]
@@ -149,6 +149,7 @@ SubShader {
 		struct appdata_t
 		{
 			float4 vertex : POSITION;
+			UNITY_VERTEX_INPUT_INSTANCE_ID
 		};
 
 		struct v2f
@@ -169,6 +170,8 @@ SubShader {
 		#if SKYBOX_SUNDISK != SKYBOX_SUNDISK_NONE
 			half3	sunColor		: TEXCOORD3;
 		#endif
+		UNITY_VERTEX_INPUT_INSTANCE_ID
+		UNITY_VERTEX_OUTPUT_STEREO
 		};
 
 
@@ -187,6 +190,10 @@ SubShader {
 		v2f vert (appdata_t v)
 		{
 			v2f OUT;
+			UNITY_SETUP_INSTANCE_ID(v);
+			UNITY_INITIALIZE_OUTPUT(v2f, OUT);
+			UNITY_TRANSFER_INSTANCE_ID(v, OUT);
+			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 			OUT.pos = UnityObjectToClipPos(v.vertex);
 
 			float3 kSkyTintInGammaSpace = COLOR_2_GAMMA(_SkyTint); // convert tint from Linear back to Gamma
@@ -354,6 +361,8 @@ SubShader {
 
 		half4 frag (v2f IN) : SV_Target
 		{
+			UNITY_SETUP_INSTANCE_ID(IN);
+			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 			half3 col = half3(0.0, 0.0, 0.0);
 
 		// if y > 1 [eyeRay.y < -SKY_GROUND_THRESHOLD] - ground

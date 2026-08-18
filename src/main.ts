@@ -22,13 +22,11 @@ async function doMap(file: rm.DIFFICULTY_NAME) {
 
     map.difficultyInfo.settingsSetter = {
         graphics: {
-            screenDisplacementEffectsEnabled: true,
         },
         chroma: {
             disableEnvironmentEnhancements: false,
         },
         playerOptions: {
-            noteJumpDurationTypeSettings: 'Dynamic',
         },
         colors: {},
         environments: {},
@@ -40,6 +38,7 @@ async function doMap(file: rm.DIFFICULTY_NAME) {
             shadows: rm.SHADOWS.HardOnly,
             shadowDistance: 8,
             shadowResolution: rm.SHADOW_RESOLUTION.Low,
+            softParticles: rm.BOOLEAN.True,
             
         },
         renderSettings: {

@@ -33,6 +33,7 @@
 		   struct appdata
 		   {
 			   float4 vertex : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
                
 		   };
 
@@ -40,11 +41,14 @@
 		   {
 			   float4 scrPos : TEXCOORD0;
                float3 worldPosition : TEXCOORD1;
-			   UNITY_FOG_COORDS(1)
+			   UNITY_FOG_COORDS(2)
 			   float4 vertex : SV_POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
 		   };
 
-		   sampler2D _CameraDepthTexture;
+		   // Stereo-aware depth texture declaration/sampling (fixes single-pass instanced VR)
+		   UNITY_DECLARE_SCREENSPACE_TEXTURE(_CameraDepthTexture);
 		   float4 _Color;
 		   float4 _IntersectionColor;
 		   float _IntersectionThresholdMax;
@@ -57,6 +61,10 @@
 		   v2f vert(appdata v)
 		   {
 			   v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 			   o.vertex = UnityObjectToClipPos(v.vertex);
 			   o.scrPos = ComputeScreenPos(o.vertex);
                o.worldPosition = localToWorld(v.vertex); // from Math.cginc
@@ -67,7 +75,14 @@
 
 			half4 frag(v2f i) : SV_TARGET
 			{
-			   float depth = LinearEyeDepth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos)));
+				UNITY_SETUP_INSTANCE_ID(i);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+
+               // Manually do the projective divide, then transform per-eye for single-pass stereo
+               float2 screenUV = i.scrPos.xy / i.scrPos.w;
+               screenUV = UnityStereoTransformScreenSpaceTex(screenUV);
+			   float depth = LinearEyeDepth(UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV));
+
                #if HEIGHT_FOG
                 float heightFog = smoothstep(_HeightFogStart, _HeightFogEnd, i.worldPosition.y);
                 heightFog = pow(heightFog, 10);

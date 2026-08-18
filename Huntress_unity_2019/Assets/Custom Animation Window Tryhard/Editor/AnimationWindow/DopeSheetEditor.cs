@@ -132,6 +132,14 @@ namespace UnityEditorInternal.Enemeteen {
 				m_DragDropKeysRenderer.Render();
 			}
 
+			private Vector2 k_KeyframeScalingOffset() {
+				if (EditorGUIUtility.pixelsPerPoint == 1) {
+					return new Vector2(0,0);
+				} else {
+					return new Vector2(m_DefaultDopeKeyIcon.height/4, m_DefaultDopeKeyIcon.height/4);
+				}
+			}
+
 			public void AddUnselectedKey(DrawElement element) {
 				// Control point has a specific texture (sprite image).
 				// This will not be batched rendered and must be handled separately.
@@ -141,6 +149,7 @@ namespace UnityEditorInternal.Enemeteen {
 				else {
 					Rect rect = element.position;
 					rect.size = new Vector2(m_DefaultDopeKeyIcon.width, m_DefaultDopeKeyIcon.height);
+					rect.center = rect.center - k_KeyframeScalingOffset();
 					m_UnselectedKeysRenderer.AddPoint(rect, element.color);
 				}
 			}
@@ -154,6 +163,7 @@ namespace UnityEditorInternal.Enemeteen {
 				else {
 					Rect rect = element.position;
 					rect.size = new Vector2(m_DefaultDopeKeyIcon.width, m_DefaultDopeKeyIcon.height);
+					rect.center = rect.center - k_KeyframeScalingOffset();
 					m_SelectedKeysRenderer.AddPoint(rect, element.color);
 				}
 			}
@@ -167,6 +177,7 @@ namespace UnityEditorInternal.Enemeteen {
 				else {
 					Rect rect = element.position;
 					rect.size = new Vector2(m_DefaultDopeKeyIcon.width, m_DefaultDopeKeyIcon.height);
+					rect.center = rect.center - k_KeyframeScalingOffset();
 					m_DragDropKeysRenderer.AddPoint(rect, element.color);
 				}
 			}

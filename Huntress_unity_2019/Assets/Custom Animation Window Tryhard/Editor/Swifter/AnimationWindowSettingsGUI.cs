@@ -41,7 +41,10 @@ class AnimationWindowSettingsGUI
         new GUIContent("BPM", "The beats per minute of the audio.");
     private static GUIContent s_WaveformColorField =
         new GUIContent("Waveform Color", "The color of the waveform for the audio visualization.");
-
+    private static GUIContent s_WaveformHeightField =
+        new GUIContent("Waveform Height", "The height of the waveform for the audio visualization.");
+    private static GUIContent s_WaveformBGField =
+        new GUIContent("Waveform In Background", "Whether the audio visualization is drawn in the background of timeline.");
     private static GUIContent s_BpmGuideField =
         new GUIContent("BPM Guide Enabled", "Whether to enable BPM guides.");
     private static GUIContent s_BeatPrecisionField =
@@ -162,6 +165,14 @@ class AnimationWindowSettingsGUI
 
         BeginHorizontal();
         audioControls.m_waveformColor = EditorGUILayout.ColorField(s_WaveformColorField, audioControls.m_waveformColor);
+        EndHorizontal();
+
+        BeginHorizontal();
+        audioControls.m_waveformHeight = EditorGUILayout.IntField(s_WaveformHeightField, audioControls.m_waveformHeight);
+        EndHorizontal();
+
+        BeginHorizontal();
+        audioControls.m_waveformBG = EditorGUILayout.Toggle(s_WaveformBGField, audioControls.m_waveformBG);
         EndHorizontal();
 
         BeginHorizontal();
